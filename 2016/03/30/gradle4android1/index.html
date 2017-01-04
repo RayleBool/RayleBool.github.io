@@ -1,0 +1,881 @@
+<!doctype html>
+
+
+
+
+<html class="theme-next pisces" lang="zh-Hans">
+<head>
+  <meta charset="UTF-8">
+<meta http-equiv="X-UA-Compatible" content="IE=edge">
+<meta name="viewport" content="width=device-width,initial-scale=1,maximum-scale=1">
+
+
+
+<meta http-equiv="Cache-Control" content="no-transform">
+<meta http-equiv="Cache-Control" content="no-siteapp">
+
+
+
+
+
+
+
+
+
+
+
+
+  
+  
+  <link href="/lib/fancybox/source/jquery.fancybox.css?v=2.1.5" rel="stylesheet" type="text/css">
+
+
+
+
+  
+  
+  
+  
+
+  
+    
+    
+  
+
+  
+
+  
+
+  
+
+  
+
+  
+    
+    
+    <link href="//fonts.googleapis.com/css?family=Lato:300,300italic,400,400italic,700,700italic&subset=latin,latin-ext" rel="stylesheet" type="text/css">
+  
+
+
+
+
+
+
+<link href="/lib/font-awesome/css/font-awesome.min.css?v=4.6.2" rel="stylesheet" type="text/css">
+
+<link href="/css/main.css?v=5.1.0" rel="stylesheet" type="text/css">
+
+
+  <meta name="keywords" content="Gradle,">
+
+
+
+
+
+  <link rel="alternate" href="/atom.xml" title="吴小龙同學" type="application/atom+xml">
+
+
+
+
+  <link rel="shortcut icon" type="image/x-icon" href="/favicon.ico?v=5.1.0">
+
+
+
+
+
+
+<meta name="description" content="Gradle是一种基于Groovy的动态DSL，而Groovy语言是一种基于jvm的动态语言。这里只分享实际开发中会用到的场景，您不需要去学习Groovy语言，知道Java的您是很容易阅读Groovy语言的。系列博客涉及的知识点有：Gradle基本配置、依赖管理、全局设置、自定义BuildConfig、混淆、多渠道打包、配置签名信息、单元测试，是不是迫不及待了啊，快来学习学习。
+
+基本配置新建项">
+<meta property="og:type" content="article">
+<meta property="og:title" content="Gradle for Android（一）基本配置、依赖管理">
+<meta property="og:url" content="http://wuxiaolong.me/2016/03/30/gradle4android1/index.html">
+<meta property="og:site_name" content="吴小龙同學">
+<meta property="og:description" content="Gradle是一种基于Groovy的动态DSL，而Groovy语言是一种基于jvm的动态语言。这里只分享实际开发中会用到的场景，您不需要去学习Groovy语言，知道Java的您是很容易阅读Groovy语言的。系列博客涉及的知识点有：Gradle基本配置、依赖管理、全局设置、自定义BuildConfig、混淆、多渠道打包、配置签名信息、单元测试，是不是迫不及待了啊，快来学习学习。
+
+基本配置新建项">
+<meta property="og:image" content="http://7q5c2h.com1.z0.glb.clouddn.com/gradle4android1.png">
+<meta property="og:image" content="http://7q5c2h.com1.z0.glb.clouddn.com/qrcode_wuxiaolong.jpg">
+<meta property="og:updated_time" content="2016-08-25T11:38:52.946Z">
+<meta name="twitter:card" content="summary">
+<meta name="twitter:title" content="Gradle for Android（一）基本配置、依赖管理">
+<meta name="twitter:description" content="Gradle是一种基于Groovy的动态DSL，而Groovy语言是一种基于jvm的动态语言。这里只分享实际开发中会用到的场景，您不需要去学习Groovy语言，知道Java的您是很容易阅读Groovy语言的。系列博客涉及的知识点有：Gradle基本配置、依赖管理、全局设置、自定义BuildConfig、混淆、多渠道打包、配置签名信息、单元测试，是不是迫不及待了啊，快来学习学习。
+
+基本配置新建项">
+<meta name="twitter:image" content="http://7q5c2h.com1.z0.glb.clouddn.com/gradle4android1.png">
+
+
+
+<script type="text/javascript" id="hexo.configurations">
+  var NexT = window.NexT || {};
+  var CONFIG = {
+    root: '/',
+    scheme: 'Pisces',
+    sidebar: {"position":"left","display":"post"},
+    fancybox: true,
+    motion: false,
+    duoshuo: {
+      userId: 'wuxiaolong',
+      author: '博主'
+    },
+    algolia: {
+      applicationID: '',
+      apiKey: '',
+      indexName: '',
+      hits: {"per_page":10},
+      labels: {"input_placeholder":"Search for Posts","hits_empty":"We didn't find any results for the search: ${query}","hits_stats":"${hits} results found in ${time} ms"}
+    }
+  };
+</script>
+
+
+
+  <link rel="canonical" href="http://wuxiaolong.me/2016/03/30/gradle4android1/">
+
+
+
+
+
+  <title> Gradle for Android（一）基本配置、依赖管理 | 吴小龙同學 </title>
+</head>
+
+<body itemscope itemtype="http://schema.org/WebPage" lang="zh-Hans">
+
+  
+
+
+
+  <script type="text/javascript">
+    var _hmt = _hmt || [];
+    (function() {
+      var hm = document.createElement("script");
+      hm.src = "//hm.baidu.com/hm.js?0e1dc2030f397dfa0d60ad22b374430d";
+      var s = document.getElementsByTagName("script")[0];
+      s.parentNode.insertBefore(hm, s);
+    })();
+  </script>
+
+
+
+
+
+
+
+
+  
+  
+    
+  
+
+  <div class="container one-collumn sidebar-position-left page-post-detail">
+    <div class="headband"></div>
+
+    <header id="header" class="header" itemscope itemtype="http://schema.org/WPHeader">
+      <div class="header-inner"><div class="site-meta">
+  
+
+  <div class="custom-logo-site-title">
+    <a href="/" class="brand" rel="start">
+      <span class="logo-line-before"><i></i></span>
+      <span class="site-title">吴小龙同學</span>
+      <span class="logo-line-after"><i></i></span>
+    </a>
+  </div>
+  <p class="site-subtitle">党要我帅，我不得不帅！</p>
+</div>
+
+<div class="site-nav-toggle">
+  <button>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+    <span class="btn-bar"></span>
+  </button>
+</div>
+
+<nav class="site-nav">
+  
+
+  
+    <ul id="menu" class="menu">
+      
+        
+        <li class="menu-item menu-item-home">
+          <a href="/" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-home"></i> <br>
+            
+            首页
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-categories">
+          <a href="/categories" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-th"></i> <br>
+            
+            分类
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-archives">
+          <a href="/archives" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-archive"></i> <br>
+            
+            归档
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-tags">
+          <a href="/tags" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-tags"></i> <br>
+            
+            标签
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-friendslinks">
+          <a href="/friendslinks" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-users"></i> <br>
+            
+            小伙伴
+          </a>
+        </li>
+      
+        
+        <li class="menu-item menu-item-about">
+          <a href="/about" rel="section">
+            
+              <i class="menu-item-icon fa fa-fw fa-user"></i> <br>
+            
+            关于
+          </a>
+        </li>
+      
+
+      
+        <li class="menu-item menu-item-search">
+          
+            <a href="javascript:;" class="st-search-show-outputs">
+          
+            
+              <i class="menu-item-icon fa fa-search fa-fw"></i> <br>
+            
+            搜索
+          </a>
+        </li>
+      
+    </ul>
+  
+
+  
+    <div class="site-search">
+      
+  <form class="site-search-form">
+  <input type="text" id="st-search-input" class="st-search-input st-default-search-input">
+</form>
+
+<script type="text/javascript">
+  (function(w,d,t,u,n,s,e){w['SwiftypeObject']=n;w[n]=w[n]||function(){
+    (w[n].q=w[n].q||[]).push(arguments);};s=d.createElement(t);
+    e=d.getElementsByTagName(t)[0];s.async=1;s.src=u;e.parentNode.insertBefore(s,e);
+  })(window,document,'script','//s.swiftypecdn.com/install/v2/st.js','_st');
+
+  _st('install', 'ywBn2eRCzfb494KCWJw3','2.0.0');
+</script>
+
+
+
+    </div>
+  
+</nav>
+
+
+
+ </div>
+    </header>
+
+    <main id="main" class="main">
+      <div class="main-inner">
+        <div class="content-wrap">
+          <div id="content" class="content">
+            
+
+  <div id="posts" class="posts-expand">
+    
+
+  
+
+  
+  
+  
+
+  <article class="post post-type-normal" itemscope itemtype="http://schema.org/Article">
+  <link itemprop="mainEntityOfPage" href="http://wuxiaolong.me/2016/03/30/gradle4android1/">
+
+  <span style="display:none" itemprop="author" itemscope itemtype="http://schema.org/Person">
+    <meta itemprop="name" content="吴小龙同學">
+    <meta itemprop="description" content="">
+    <meta itemprop="image" content="/images/avatar.jpg">
+  </span>
+
+  <span style="display:none" itemprop="publisher" itemscope itemtype="http://schema.org/Organization">
+    <meta itemprop="name" content="吴小龙同學">
+    <span style="display:none" itemprop="logo" itemscope itemtype="http://schema.org/ImageObject">
+      <img style="display:none" itemprop="url image" alt="吴小龙同學" src="">
+    </span>
+  </span>
+
+    
+      <header class="post-header">
+
+        
+        
+          <h1 class="post-title" itemprop="name headline">
+            
+            
+              
+                Gradle for Android（一）基本配置、依赖管理
+              
+            
+          </h1>
+        
+
+        <div class="post-meta">
+		
+          <span class="post-time">
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-o"></i>
+            </span>
+            <span class="post-meta-item-text">发表于</span>
+            <time title="Post created" itemprop="dateCreated datePublished" datetime="2016-03-30T14:11:14+08:00">
+              2016-03-30
+            </time>
+			<!--
+			创建时间，不显示
+            &nbsp;|&nbsp;
+
+            <span class="post-meta-item-icon">
+              <i class="fa fa-calendar-check-o"></i>
+            </span>
+            <time title="Post modified" itemprop="dateModified" datetime="2016-08-25T19:38:52+08:00">
+              2016-08-25
+            </time>
+            
+          </span>
+		   -->
+		
+          
+            <span class="post-category">
+              &nbsp; | &nbsp;
+              <span class="post-meta-item-icon">
+                <i class="fa fa-folder-o"></i>
+              </span>
+              <span class="post-meta-item-text">分类于</span>
+              
+                <span itemprop="about" itemscope itemtype="http://schema.org/Thing">
+                  <a href="/categories/Gradle/" itemprop="url" rel="index">
+                    <span itemprop="name">Gradle</span>
+                  </a>
+                </span>
+
+                
+                
+
+              
+            </span>
+          
+
+          
+            
+              <span class="post-comments-count">
+                &nbsp; | &nbsp;
+                <a href="/2016/03/30/gradle4android1/#comments" itemprop="discussionUrl">
+                  <span class="post-comments-count ds-thread-count" data-thread-key="2016/03/30/gradle4android1/" itemprop="commentCount"></span>
+                </a>
+              </span>
+            
+          
+
+          
+
+          
+          
+
+          
+          
+          
+
+        </span></div>
+      </header>
+    
+
+
+    <div class="post-body" itemprop="articleBody">
+
+      
+      
+
+      
+        <blockquote>
+<p>Gradle是一种基于Groovy的动态DSL，而Groovy语言是一种基于jvm的动态语言。这里只分享实际开发中会用到的场景，您不需要去学习Groovy语言，知道Java的您是很容易阅读Groovy语言的。<br>系列博客涉及的知识点有：Gradle基本配置、依赖管理、全局设置、自定义BuildConfig、混淆、多渠道打包、配置签名信息、单元测试，是不是迫不及待了啊，快来学习学习。</p>
+</blockquote>
+<h1 id="基本配置"><a href="#基本配置" class="headerlink" title="基本配置"></a>基本配置</h1><p>新建项目，目录结构如下：<br><img src="http://7q5c2h.com1.z0.glb.clouddn.com/gradle4android1.png" alt=""><br><a id="more"></a></p>
+<h2 id="app-build-gradle"><a href="#app-build-gradle" class="headerlink" title="app/build.gradle"></a>app/build.gradle</h2><p>初始化的Gradle配置：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div><div class="line">22</div><div class="line">23</div><div class="line">24</div><div class="line">25</div><div class="line">26</div><div class="line">27</div></pre></td><td class="code"><pre><div class="line">apply plugin: &apos;com.android.application&apos;</div><div class="line"></div><div class="line">android &#123;</div><div class="line">    compileSdkVersion 23</div><div class="line">    buildToolsVersion &quot;23.0.2&quot;</div><div class="line"></div><div class="line">    defaultConfig &#123;</div><div class="line">        applicationId &quot;com.wuxiaolong.gradle4android&quot;</div><div class="line">        minSdkVersion 15</div><div class="line">        targetSdkVersion 23</div><div class="line">        versionCode 1</div><div class="line">        versionName &quot;1.0&quot;</div><div class="line">    &#125;</div><div class="line">    buildTypes &#123;</div><div class="line">        release &#123;</div><div class="line">            minifyEnabled false</div><div class="line">            proguardFiles getDefaultProguardFile(&apos;proguard-android.txt&apos;), &apos;proguard-rules.pro&apos;</div><div class="line">        &#125;</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">dependencies &#123;</div><div class="line">    compile fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])</div><div class="line">    testCompile &apos;junit:junit:4.12&apos;</div><div class="line">    compile &apos;com.android.support:appcompat-v7:23.2.1&apos;</div><div class="line">    compile &apos;com.android.support:design:23.2.1&apos;</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div></pre></td><td class="code"><pre><div class="line">apply plugin: ‘com.android.application’，表示该module是一个app module，应用了com.android.application插件，如果是一个android library，那么这里写apply plugin: ‘com.android.library’</div><div class="line"></div><div class="line">compileSdkVersion：基于哪个SDK编译，这里是API LEVEL</div><div class="line"></div><div class="line">buildToolsVersion：基于哪个构建工具版本进行构建的。</div><div class="line"></div><div class="line">defaultConfig：默认配置，如果没有其他的配置覆盖，就会使用这里的。</div><div class="line">applicationId：配置包名的</div><div class="line">versionCode：版本号</div><div class="line">versionName：版本名称</div><div class="line"></div><div class="line">buildTypes是构建类型，常用的有release和debug两种，可以在这里面启用混淆，启用zipAlign以及配置签名信息等。</div><div class="line"></div><div class="line">dependencies：不属于Android专有的配置了，它定义了该module需要依赖的jar，aar，jcenter库信息。</div></pre></td></tr></table></figure>
+<h2 id="gradle-wrapper-properties"><a href="#gradle-wrapper-properties" class="headerlink" title="gradle-wrapper.properties"></a>gradle-wrapper.properties</h2><p>声明了gradle的目录与下载路径以及当前项目使用的gradle版本，这些默认的路径我们一般不会更改的<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div></pre></td><td class="code"><pre><div class="line">distributionBase=GRADLE_USER_HOME</div><div class="line">distributionPath=wrapper/dists</div><div class="line">zipStoreBase=GRADLE_USER_HOME</div><div class="line">zipStorePath=wrapper/dists</div><div class="line">distributionUrl=https\://services.gradle.org/distributions/gradle-2.8-all.zip</div></pre></td></tr></table></figure></p>
+<h2 id="根目录的build-gradle"><a href="#根目录的build-gradle" class="headerlink" title="根目录的build.gradle"></a>根目录的build.gradle</h2><p>定义在这个工程下的所有模块的公共属性<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div><div class="line">12</div><div class="line">13</div><div class="line">14</div><div class="line">15</div><div class="line">16</div><div class="line">17</div><div class="line">18</div><div class="line">19</div><div class="line">20</div><div class="line">21</div></pre></td><td class="code"><pre><div class="line">buildscript &#123;</div><div class="line">    repositories &#123;</div><div class="line">        jcenter()//使用jcenter库</div><div class="line">    &#125;</div><div class="line">    dependencies &#123;</div><div class="line">        classpath &apos;com.android.tools.build:gradle:1.5.0&apos;// 依赖android提供的1.5.0的gradle build</div><div class="line"></div><div class="line">        // NOTE: Do not place your application dependencies here; they belong</div><div class="line">        // in the individual module build.gradle files</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">//为所有的工程的repositories配置为jcenters</div><div class="line">allprojects &#123;</div><div class="line">    repositories &#123;</div><div class="line">        jcenter()</div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line"></div><div class="line">task clean(type: Delete) &#123;</div><div class="line">    delete rootProject.buildDir</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h2 id="setting-gradle"><a href="#setting-gradle" class="headerlink" title="setting.gradle"></a>setting.gradle</h2><p>包含哪些模块，比如有app和library：<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div></pre></td><td class="code"><pre><div class="line">include &apos;:app&apos;,&apos;:library&apos;</div></pre></td></tr></table></figure></p>
+<h1 id="依赖管理"><a href="#依赖管理" class="headerlink" title="依赖管理"></a>依赖管理</h1><h2 id="本地依赖"><a href="#本地依赖" class="headerlink" title="本地依赖"></a>本地依赖</h2><h3 id="jar"><a href="#jar" class="headerlink" title="jar"></a>jar</h3><p>默认情况下，新建的Android项目会有一个lib文件夹<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">dependencies &#123;</div><div class="line">       compile fileTree(dir: &apos;libs&apos;, include: [&apos;*.jar&apos;])//即添加所有在libs文件夹中的jar</div><div class="line">       //compile files(&apos;libs/WuXiaolong.jar&apos;)//不需要这样一个个去写了</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<h3 id="so包"><a href="#so包" class="headerlink" title="so包"></a>so包</h3><p>用c或者c++写的library会被叫做so包，Android插件默认情况下支持native包，你需要把.so文件放在对应的文件夹中<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div><div class="line">9</div><div class="line">10</div><div class="line">11</div></pre></td><td class="code"><pre><div class="line">app</div><div class="line">   ├── AndroidManifest.xml</div><div class="line">   └── jniLibs</div><div class="line">       ├── armeabi</div><div class="line">       │   └── WuXiaolong.so</div><div class="line">       ├── armeabi-v7a</div><div class="line">       │   └── WuXiaolong.so</div><div class="line">       ├── mips</div><div class="line">       │   └── WuXiaolong.so</div><div class="line">       └── x86</div><div class="line">           └── WuXiaolong.so</div></pre></td></tr></table></figure></p>
+<h3 id="aar文件"><a href="#aar文件" class="headerlink" title="aar文件"></a>aar文件</h3><p>library库输出文件是.aar文件，包含了Android 资源文件，在library工程build/output/aar/下</p>
+<p>直接依赖library库<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div></pre></td><td class="code"><pre><div class="line">dependencies &#123;</div><div class="line">       compile project(&apos;:library名字&apos;)</div><div class="line">       compile project(&apos;:libraries:library名字&apos;)//多个library，libraries是文件夹名字</div><div class="line">  &#125;</div></pre></td></tr></table></figure></p>
+<p>依赖.aar文件<br>创建一个aars文件夹，然后把.aar文件拷贝到该文件夹里面，然后添加该文件夹作为依赖库：<br>app/bulid.gradle<br><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div><div class="line">4</div><div class="line">5</div><div class="line">6</div><div class="line">7</div><div class="line">8</div></pre></td><td class="code"><pre><div class="line">repositories &#123;</div><div class="line">    flatDir &#123;</div><div class="line">        dirs &apos;aars&apos; </div><div class="line">    &#125;</div><div class="line">&#125;</div><div class="line">dependencies &#123;</div><div class="line">       compile(name:&apos;libraryname&apos;, ext:&apos;aar&apos;)</div><div class="line">&#125;</div></pre></td></tr></table></figure></p>
+<p>注意：如果你的library依赖了第三方库，须app再次依赖。</p>
+<h2 id="远程仓库"><a href="#远程仓库" class="headerlink" title="远程仓库"></a>远程仓库</h2><figure class="highlight plain"><table><tr><td class="gutter"><pre><div class="line">1</div><div class="line">2</div><div class="line">3</div></pre></td><td class="code"><pre><div class="line">dependencies &#123;</div><div class="line">		compile &apos;com.wuxiaolong.pullloadmorerecyclerview:library:1.0.4&apos;</div><div class="line">&#125;</div></pre></td></tr></table></figure>
+<h1 id="微信公众号"><a href="#微信公众号" class="headerlink" title="微信公众号"></a>微信公众号</h1><p>我的微信公众号：吴小龙同学，不止于技术分享，每天进步一点点，欢迎微信扫一扫关注。<br><img src="http://7q5c2h.com1.z0.glb.clouddn.com/qrcode_wuxiaolong.jpg" alt=""></p>
+<h1 id="关于作者"><a href="#关于作者" class="headerlink" title="关于作者"></a>关于作者</h1><p><a href="http://wuxiaolong.me/about/">点击查看</a></p>
+<h1 id="完整配置"><a href="#完整配置" class="headerlink" title="完整配置"></a>完整配置</h1><p><a href="https://github.com/WuXiaolong/Gradle4Android" target="_blank" rel="external">https://github.com/WuXiaolong/Gradle4Android</a></p>
+<h1 id="系列博客"><a href="#系列博客" class="headerlink" title="系列博客"></a>系列博客</h1><p><a href="http://wuxiaolong.me/2016/03/31/gradle4android2/">Gradle for Android（二）全局设置、自定义BuildConfig、混淆</a><br><a href="http://wuxiaolong.me/2016/04/01/gradle4android3/">Gradle for Android（三）多渠道打包、配置签名信息</a></p>
+		<!--微信公众号-->
+		﻿<div> 
+<h1><b>联系我</b></h1>
+<center>我的微信公众号：吴小龙同学，欢迎关注交流~</center>
+<img src="http://7q5c2h.com1.z0.glb.clouddn.com/qrcode_wuxiaolong_dog.jpg"> 
+<br>
+
+<center>Android技术交流群④群:331553260</center>
+<a target="_blank" href="//shang.qq.com/wpa/qunwpa?idkey=d87a735d37fdb8e5b2cec4838e0aefc47a6843ea1141889cc5b108de0f678efc">
+<img border="0" src="//pub.idqqimg.com/wpa/images/group.png" alt="剩者为王④群" title="剩者为王④群"></a>
+<img src="http://7q5c2h.com1.z0.glb.clouddn.com/qun4.png"> 
+</div>  
+      
+	  
+    </div>
+
+    <div>
+      
+        
+
+      
+    </div>
+
+		
+    <div>
+      	
+		<!--这里可展示广告	
+		﻿<div style="padding: 10px 0; margin: 20px auto; width: 99%; text-align: center;"> 
+<b>赞助商：<a href="https://shop240489162.taobao.com/">躲角落的猫咪</a></b>
+<br>
+<img src="http://7q5c2h.com1.z0.glb.clouddn.com/taobaoshop.png"/> 
+</div>	-->	
+        
+  <div style="padding: 10px 0; margin: 20px auto; width: 99%; text-align: center">
+    <div></div>
+    <button id="rewardButton" disable="enable" onclick="var qr = document.getElementById('QR'); if (qr.style.display === 'none') {qr.style.display='block';} else {qr.style.display='none'}">
+      <span>赞赏</span>
+    </button>
+    <div id="QR" style="display: none">
+      
+        <div id="wechat" style="display: inline-block">
+          <img id="wechat_qr" src="/path/to/pay/wechatpay.JPG" alt="吴小龙同學 WeChat Pay">
+          <p>微信赞赏</p>
+        </div>
+      
+      
+        <div id="alipay" style="display: inline-block">
+          <img id="alipay_qr" src="/path/to/pay/aliPay.png" alt="吴小龙同學 Alipay">
+          <p>支付宝赞赏</p>
+        </div>
+      
+    </div>
+  </div>
+
+
+      
+    </div>
+
+
+    <footer class="post-footer">
+      
+        <div class="post-tags">
+          
+            <a href="/tags/Gradle/" rel="tag"># Gradle</a>
+          
+        </div>
+      
+
+      
+        <div class="post-nav">
+          <div class="post-nav-next post-nav-item">
+            
+              <a href="/2016/03/28/lambda4android/" rel="next" title="Lambda for Android">
+                <i class="fa fa-chevron-left"></i> Lambda for Android
+              </a>
+            
+          </div>
+
+          <span class="post-nav-divider"></span>
+
+          <div class="post-nav-prev post-nav-item">
+            
+              <a href="/2016/03/31/gradle4android2/" rel="prev" title="Gradle for Android（二）全局设置、自定义BuildConfig、混淆">
+                Gradle for Android（二）全局设置、自定义BuildConfig、混淆 <i class="fa fa-chevron-right"></i>
+              </a>
+            
+          </div>
+        </div>
+      
+
+      
+      
+    </footer>
+  </article>
+
+
+
+    <div class="post-spread">
+      
+        <div class="ds-share flat" data-thread-key="2016/03/30/gradle4android1/" data-title="Gradle for Android（一）基本配置、依赖管理" data-content="" data-url="http://wuxiaolong.me/2016/03/30/gradle4android1/">
+  <div class="ds-share-inline">
+    <ul class="ds-share-icons-16">
+
+      <li data-toggle="ds-share-icons-more"><a class="ds-more" href="javascript:void(0);">分享到：</a></li>
+      <li><a class="ds-weibo" href="javascript:void(0);" data-service="weibo">微博</a></li>
+      <li><a class="ds-qzone" href="javascript:void(0);" data-service="qzone">QQ空间</a></li>
+      <li><a class="ds-qqt" href="javascript:void(0);" data-service="qqt">腾讯微博</a></li>
+      <li><a class="ds-wechat" href="javascript:void(0);" data-service="wechat">微信</a></li>
+
+    </ul>
+    <div class="ds-share-icons-more">
+    </div>
+  </div>
+</div>
+      
+    </div>
+  </div>
+
+
+          </div>
+          
+
+
+          
+  <div class="comments" id="comments">
+    
+      <div class="ds-thread" data-thread-key="2016/03/30/gradle4android1/" data-title="Gradle for Android（一）基本配置、依赖管理" data-url="http://wuxiaolong.me/2016/03/30/gradle4android1/">
+      </div>
+    
+  </div>
+
+
+        </div>
+        
+          
+  
+  <div class="sidebar-toggle">
+    <div class="sidebar-toggle-line-wrap">
+      <span class="sidebar-toggle-line sidebar-toggle-line-first"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-middle"></span>
+      <span class="sidebar-toggle-line sidebar-toggle-line-last"></span>
+    </div>
+  </div>
+
+  <aside id="sidebar" class="sidebar">
+    <div class="sidebar-inner">
+
+      
+
+      
+        <ul class="sidebar-nav motion-element">
+          <li class="sidebar-nav-toc sidebar-nav-active" data-target="post-toc-wrap">
+            文章目录
+          </li>
+          <li class="sidebar-nav-overview" data-target="site-overview">
+            站点概览
+          </li>
+        </ul>
+      
+
+      <section class="site-overview sidebar-panel">
+        <div class="site-author motion-element" itemprop="author" itemscope itemtype="http://schema.org/Person">
+          <img class="site-author-image" itemprop="image" src="/images/avatar.jpg" alt="吴小龙同學">
+          <p class="site-author-name" itemprop="name">吴小龙同學</p>
+          <p class="site-description motion-element" itemprop="description">我的微信公众号：吴小龙同学</p>
+        </div>
+        <nav class="site-state motion-element">
+          <div class="site-state-item site-state-posts">
+            <a href="/archives">
+              <span class="site-state-item-count">138</span>
+              <span class="site-state-item-name">日志</span>
+            </a>
+          </div>
+
+          
+            <div class="site-state-item site-state-categories">
+              <a href="/categories">
+                <span class="site-state-item-count">26</span>
+                <span class="site-state-item-name">分类</span>
+              </a>
+            </div>
+          
+
+          
+            <div class="site-state-item site-state-tags">
+              <a href="/tags">
+                <span class="site-state-item-count">109</span>
+                <span class="site-state-item-name">标签</span>
+              </a>
+            </div>
+          
+
+        </nav>
+
+        
+          <div class="feed-link motion-element">
+            <a href="/atom.xml" rel="alternate">
+              <i class="fa fa-rss"></i>
+              RSS
+            </a>
+          </div>
+        
+
+        <div class="links-of-author motion-element">
+          
+            
+              <span class="links-of-author-item">
+                <a href="http://weixin.sogou.com/weixin?type=1&query=%E5%90%B4%E5%B0%8F%E9%BE%99%E5%90%8C%E5%AD%A6" target="_blank" title="WeChat">
+                  
+                    <i class="fa fa-fw fa-weixin"></i>
+                  
+                  WeChat
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="https://github.com/WuXiaolong" target="_blank" title="GitHub">
+                  
+                    <i class="fa fa-fw fa-github"></i>
+                  
+                  GitHub
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="http://weibo.com/u/2175011601" target="_blank" title="Weibo">
+                  
+                    <i class="fa fa-fw fa-weibo"></i>
+                  
+                  Weibo
+                </a>
+              </span>
+            
+              <span class="links-of-author-item">
+                <a href="/qq" target="_blank" title="QQ">
+                  
+                    <i class="fa fa-fw fa-qq"></i>
+                  
+                  QQ
+                </a>
+              </span>
+            
+          
+        </div>
+
+        
+        
+
+        
+        
+
+        
+
+
+      </section>
+
+      
+      <!--noindex-->
+        <section class="post-toc-wrap motion-element sidebar-panel sidebar-panel-active">
+          <div class="post-toc">
+
+            
+              
+            
+
+            
+              <div class="post-toc-content"><ol class="nav"><li class="nav-item nav-level-1"><a class="nav-link" href="#基本配置"><span class="nav-number">1.</span> <span class="nav-text">基本配置</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#app-build-gradle"><span class="nav-number">1.1.</span> <span class="nav-text">app/build.gradle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#gradle-wrapper-properties"><span class="nav-number">1.2.</span> <span class="nav-text">gradle-wrapper.properties</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#根目录的build-gradle"><span class="nav-number">1.3.</span> <span class="nav-text">根目录的build.gradle</span></a></li><li class="nav-item nav-level-2"><a class="nav-link" href="#setting-gradle"><span class="nav-number">1.4.</span> <span class="nav-text">setting.gradle</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#依赖管理"><span class="nav-number">2.</span> <span class="nav-text">依赖管理</span></a><ol class="nav-child"><li class="nav-item nav-level-2"><a class="nav-link" href="#本地依赖"><span class="nav-number">2.1.</span> <span class="nav-text">本地依赖</span></a><ol class="nav-child"><li class="nav-item nav-level-3"><a class="nav-link" href="#jar"><span class="nav-number">2.1.1.</span> <span class="nav-text">jar</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#so包"><span class="nav-number">2.1.2.</span> <span class="nav-text">so包</span></a></li><li class="nav-item nav-level-3"><a class="nav-link" href="#aar文件"><span class="nav-number">2.1.3.</span> <span class="nav-text">aar文件</span></a></li></ol></li><li class="nav-item nav-level-2"><a class="nav-link" href="#远程仓库"><span class="nav-number">2.2.</span> <span class="nav-text">远程仓库</span></a></li></ol></li><li class="nav-item nav-level-1"><a class="nav-link" href="#微信公众号"><span class="nav-number">3.</span> <span class="nav-text">微信公众号</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#关于作者"><span class="nav-number">4.</span> <span class="nav-text">关于作者</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#完整配置"><span class="nav-number">5.</span> <span class="nav-text">完整配置</span></a></li><li class="nav-item nav-level-1"><a class="nav-link" href="#系列博客"><span class="nav-number">6.</span> <span class="nav-text">系列博客</span></a></li></ol></div>
+            
+
+          </div>
+        </section>
+      <!--/noindex-->
+      
+
+    </div>
+  </aside>
+
+
+        
+      </div>
+    </main>
+
+    <footer id="footer" class="footer">
+      <div class="footer-inner">
+        <div class="copyright">
+  
+  &copy;  2013 - 
+  <span itemprop="copyrightYear">2016</span>
+  <span class="with-love">
+    <i class="fa fa-heart"></i>
+  </span>
+  <span class="author" itemprop="copyrightHolder">吴小龙同學</span>
+</div>
+
+
+<div class="powered-by">
+  由 <a class="theme-link" href="https://hexo.io">Hexo</a> 强力驱动
+</div>
+
+<div class="theme-info">
+  主题 -
+  <a class="theme-link" href="https://github.com/iissnan/hexo-theme-next">
+    NexT.Pisces
+  </a>
+</div>
+
+
+        
+
+        
+      </div>
+    </footer>
+
+    <div class="back-to-top">
+      <i class="fa fa-arrow-up"></i>
+    </div>
+  </div>
+
+  
+
+<script type="text/javascript">
+  if (Object.prototype.toString.call(window.Promise) !== '[object Function]') {
+    window.Promise = null;
+  }
+</script>
+
+
+
+
+
+
+
+
+
+  
+
+
+
+  
+  <script type="text/javascript" src="/lib/jquery/index.js?v=2.1.3"></script>
+
+  
+  <script type="text/javascript" src="/lib/fastclick/lib/fastclick.min.js?v=1.0.6"></script>
+
+  
+  <script type="text/javascript" src="/lib/jquery_lazyload/jquery.lazyload.js?v=1.9.7"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/velocity/velocity.ui.min.js?v=1.2.1"></script>
+
+  
+  <script type="text/javascript" src="/lib/fancybox/source/jquery.fancybox.pack.js?v=2.1.5"></script>
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/utils.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/motion.js?v=5.1.0"></script>
+
+
+
+  
+  
+
+
+  <script type="text/javascript" src="/js/src/affix.js?v=5.1.0"></script>
+
+  <script type="text/javascript" src="/js/src/schemes/pisces.js?v=5.1.0"></script>
+
+
+
+  
+  <script type="text/javascript" src="/js/src/scrollspy.js?v=5.1.0"></script>
+<script type="text/javascript" src="/js/src/post-details.js?v=5.1.0"></script>
+
+
+
+  
+
+
+  <script type="text/javascript" src="/js/src/bootstrap.js?v=5.1.0"></script>
+
+
+
+  
+
+  
+    
+  
+
+  <script type="text/javascript">
+    var duoshuoQuery = {short_name:"wuxiaolong"};
+    (function() {
+      var ds = document.createElement('script');
+      ds.type = 'text/javascript';ds.async = true;
+      ds.id = 'duoshuo-script';
+      ds.src = (document.location.protocol == 'https:' ? 'https:' : 'http:') + '//static.duoshuo.com/embed.js';
+      ds.charset = 'UTF-8';
+      (document.getElementsByTagName('head')[0]
+      || document.getElementsByTagName('body')[0]).appendChild(ds);
+    })();
+  </script>
+
+  
+    
+    
+    <script src="/lib/ua-parser-js/dist/ua-parser.min.js?v=0.7.9"></script>
+    <script src="/js/src/hook-duoshuo.js"></script>
+  
+
+
+
+
+
+
+
+
+  
+  
+
+  
+
+  
+
+  
+
+  
+
+
+</body>
+</html>
