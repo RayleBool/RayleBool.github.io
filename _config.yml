@@ -3,8 +3,8 @@ title: rayle的博客
 email: leiyisheng81@163.com
 description: > # this means to ignore newlines until "baseurl:"
   rayle的博客
-baseurl: "" # the subpath of your site, e.g. /blog/
-url: http://yansu.org # the base hostname & protocol for your site
+baseurl: "https://toxinsting.github.io/" # the subpath of your site, e.g. /blog/
+url: https://toxinsting.github.io/ # the base hostname & protocol for your site
 rss_url: /pages/feed.xml
 author: rayle
 
@@ -14,14 +14,11 @@ filter: 'category'
 recent_num: 20
 
 # Social account
-twitter: 
-weibo: 
-github: 
-instagram: 
-linkedin: 
+weibo: Rayle0801
+github: ToxinSting
 
 # avatar and Favicon
-avatar: 
+avatar:
 favicon:
 
 # disqus config
@@ -31,7 +28,7 @@ disqus:
 # google analytics config
 ga:
   id: UA-54767140-1
-  url: 
+  url:
 
 # Build settings
 permalink: /:year/:month/:day/:title.html
@@ -47,4 +44,3 @@ gems:
   - jekyll-sitemap
   - jekyll-seo-tag
   - jekyll-feed
-
