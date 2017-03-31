@@ -1,6 +1,6 @@
 # Site settings
 title: rayle的博客
-email: leiyisheng81@163.com
+email: rayle0801@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
   rayle的博客
 baseurl: "" # the subpath of your site, e.g. /blog/
@@ -14,7 +14,7 @@ filter: 'category'
 recent_num: 20
 
 # Social account
-weibo: Rayle800
+weibo: Rayle0801
 github: ToxinSting
 
 
