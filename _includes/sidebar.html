@@ -1,7 +1,6 @@
 <aside id="sidebar" class="open">
   <div id="sidebar-left">
     <a id="sidebar-avatar" href="{{ "/" | prepend: site.baseurl }}">
-      <!-- <img id="sidebar-avatar-img" alt="{{ site.tittle }}" src="{{ site.avatar | prepend: site.baseurl }}"/> -->
       <img id="sidebar-avatar-img" alt="{{ site.title }}" src="assets/img/avator.jpg"/>
     </a>
 
@@ -26,12 +25,9 @@
   </div>
 
   <div id="sidebar-right">
-    <div id="search-box">
-      <form method="get" action="//www.google.com/search" target="_blank">
-        <input id="search-input" name="q" type="text" placeholder="Search" />
-        <input type="hidden" name="sitesearch" value="{{ site.url }}">
-      </form>
-    </div>
+      <div id="search-box">
+        <input id="search-input" type="text" placeholder="Search" />
+      </div>
 
     <nav id="toc">
       {% if site.filter == 'category' %}

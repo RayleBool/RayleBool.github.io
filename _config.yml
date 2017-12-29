@@ -4,7 +4,7 @@ email: rayle0801@gmail.com
 description: > # this means to ignore newlines until "baseurl:"
   rayle的博客
 baseurl: "" # the subpath of your site, e.g. /blog/
-url: https://toxinsting.github.io/ # the base hostname & protocol for your site
+url: https://raylebool.github.io/ # the base hostname & protocol for your site
 rss_url: /pages/feed.xml
 author: rayle
 
@@ -15,17 +15,17 @@ recent_num: 20
 
 # Social account
 weibo: Rayle0801
-github: ToxinSting
+github: RayleBool
 
 
 # disqus config
 disqus:
   shortname: rayle-zh
 
-# google analytics config
+# # google analytics config
 ga:
-  id: UA-54767140-1
-  url: toxinsting.github.io
+  id: UA-111700115-1
+  url: raylebool.github.io
 
 # Build settings
 permalink: /:year/:month/:day/:title.html
