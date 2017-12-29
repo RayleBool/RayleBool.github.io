@@ -1,9 +1,9 @@
 ---
 layout: post
-title: makrdown -  语法与使用
+title: markdown -  语法与使用
 category: 工具
 tags: markdown
-keywords: makdown
+keywords: 工具,markdown
 ---
 
 ## 语法简单规则
