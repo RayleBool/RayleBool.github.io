@@ -42,11 +42,10 @@ keywords: 工具,markdown
 
 * 引用链接
 
-    ```图片是我从[视觉中国][1]中找的素材,我想把它存到[Github][2]上。
-
+    图片是我从[视觉中国][1]中找的素材,我想把它存到[Github][2]上。
     [1]:https://www.vcg.com "vcg"
     [2]:https://github.com "Github"
-    ```
+
 
 ### 粗体与斜体
 Markdown 的粗体和斜体也非常简单，用两个 * 包含一段文本就是粗体的语法，用一个 * 包含一段文本就是斜体的语法，用三个***包含一段文本表示加粗斜体，两个~~之间的文本表示删除线。
@@ -64,10 +63,10 @@ Markdown 的粗体和斜体也非常简单，用两个 * 包含一段文本就�
 * 加强代码块
 
     ```
-        public function code()
-        {
-           return 'Hello World!';
-        }
+    public function code()
+    {
+       return 'Hello World!';
+    }
     ```
 
 ### 表格
