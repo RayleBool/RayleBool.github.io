@@ -29,7 +29,7 @@ keywords: 工具,markdown
         3. 3
 
 ### 引用
-引用只需要在相应的文本前加上>即可
+引用只需要在相应的文本前加上>即可  
     >貌似是这样
 
 ### 链接
@@ -42,9 +42,9 @@ keywords: 工具,markdown
 
 * 引用链接
 
-    图片是我从[视觉中国][1]中找的素材,我想把它存到[Github][2]上。
-    [1]:https://www.vcg.com "vcg"
-    [2]:https://github.com "Github"
+    图片是我从[视觉中国][1]中找的素材,我想把它存到[Github][2]上。  
+    [1]:https://www.vcg.com "vcg"  
+    [2]:https://github.com "Github"  
 
 
 ### 粗体与斜体
@@ -67,7 +67,6 @@ public function code()
 {
     return 'Hello World!';
 }
-
 ```
 
 ### 表格
@@ -96,5 +95,14 @@ public function code()
 分割线只需要三个*
 
 ***
+
+### 缩进　　
+  * 把输入法由半角改为全角。 两次空格之后就能够有两个汉字的缩进。  
+  * 在开头的时候，先输入下面的代码，然后紧跟着输入文本即可。分号也不要掉。
+直接写  
+    1. 半方大的空白&ensp;或&#8194;  
+    2. 全方大的空白&emsp;或&#8195;  
+    3. 不断行的空白格&nbsp;或&#160;  
+
 
 哈哈 真神奇
