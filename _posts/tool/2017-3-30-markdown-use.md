@@ -62,14 +62,13 @@ Markdown 的粗体和斜体也非常简单，用两个 * 包含一段文本就�
 
 * 加强代码块
 
-    ```
-
-    public function code()
-    {
+```
+public function code()
+{
     return 'Hello World!';
-    }
+}
 
-    ```
+```
 
 ### 表格
 
